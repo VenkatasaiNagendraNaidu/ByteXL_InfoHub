@@ -1,5 +1,4 @@
-// CommonJS wrapper to be extra compatible on Vercel
-const serverless = require("serverless-http");
-const app = require("../server/server.js").default;
+import serverless from "serverless-http";
+import app from "../server/server.js";  // your Express app (ESM export default)
 
-module.exports = serverless(app);
+export default serverless(app);         // <-- Vercel expects a default function
