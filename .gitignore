@@ -15,3 +15,6 @@ server/.env
 
 # local vercel cli
 .vercel/
+
+client/package-lock.json
+server/package-lock.json
