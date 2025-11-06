@@ -1,12 +1,14 @@
+@'
 {
   "version": 2,
   "builds": [
     { "src": "api/index.mjs", "use": "@vercel/node" },
-    { "src": "client/package.json", "use": "@vercel/static-build" }
+    { "src": "client/package.json", "use": "@vercel/static-build", "config": { "distDir": "client/dist" } }
   ],
   "routes": [
     { "src": "^/api/(.*)$", "dest": "/api/index.mjs" },
     { "handle": "filesystem" },
-    { "src": "^(?!/api)(.*)$", "dest": "/" }
+    { "src": "^(?!/api)(.*)$", "dest": "/index.html" }
   ]
 }
+'@ | Set-Content -NoNewline -Encoding utf8 .\vercel.json

@@ -1,15 +1,15 @@
-{
-  "name": "bytexl-infohub",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "npm --prefix client install --no-audit --no-fund && npm --prefix client run build"
-  },
-  "dependencies": {
-    "axios": "^1.7.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "serverless-http": "^3.2.0"
-  }
+﻿{
+    "name":  "bytexl-infohub",
+    "private":  true,
+    "type":  "module",
+    "scripts":  {
+                    "build":  "npm --prefix client run build"
+                },
+    "dependencies":  {
+                         "axios":  "^1.7.7",
+                         "cors":  "^2.8.5",
+                         "dotenv":  "^16.4.5",
+                         "express":  "^4.19.2",
+                         "serverless-http":  "^3.2.0"
+                     }
 }
