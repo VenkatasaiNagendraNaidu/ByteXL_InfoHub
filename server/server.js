@@ -38,20 +38,16 @@ app.get("/api/quote", async (_req, res) => {
 
 app.get("/api/weather", async (req, res) => {
   try {
-    const { lat, lon, country, state, city } = req.query;
+    const { city } = req.query;
 
-    let query = "";
-    if (lat && lon) {
-      query = `lat=${lat}&lon=${lon}`;
-    } else {
-      if (!country || !state || !city)
-        return res.status(400).json({
-          error: "Please provide Country, State, and City fields.",
-        });
-      query = `q=${encodeURIComponent(`${city},${state},${country}`)}`;
+    if (!city) {
+      return res.status(400).json({ error: "Please provide a city name." });
     }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?${query}&appid=${process.env.WEATHER_API_KEY}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+      city
+    )}&appid=${process.env.WEATHER_API_KEY}&units=metric`;
+
     const r = await axios.get(url);
     const { main, weather, name, sys, coord } = r.data;
 
@@ -68,6 +64,7 @@ app.get("/api/weather", async (req, res) => {
     res.status(500).json({ error: "Could not fetch weather data." });
   }
 });
+
 
 app.get("/api/currency", async (req, res) => {
   try {
@@ -99,6 +96,7 @@ app.get("/api/currency", async (req, res) => {
 
 
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => console.log(` API running on http://localhost:${PORT}`));
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => console.log(`✅ API running on http://localhost:${PORT}`));
 }
 export default app;
