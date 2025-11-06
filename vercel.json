@@ -1,4 +1,3 @@
-@'
 {
   "version": 2,
   "builds": [
@@ -11,4 +10,3 @@
     { "src": "^(?!/api)(.*)$", "dest": "/index.html" }
   ]
 }
-'@ | Set-Content -NoNewline -Encoding utf8 .\vercel.json
