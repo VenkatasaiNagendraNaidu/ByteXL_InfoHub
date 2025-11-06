@@ -2,10 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-@import "tailwindcss";
-
+/* ---- your custom theme & utilities ---- */
 @theme { --color-bg: #0b1220; }
 
 @layer base {

@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.get("/api/quote", async (_req, res) => {
   try {
     res.set({
@@ -98,8 +98,7 @@ app.get("/api/currency", async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3001;
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => console.log(`✅ API running on http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(` API running on http://localhost:${PORT}`));
 }
 export default app;
