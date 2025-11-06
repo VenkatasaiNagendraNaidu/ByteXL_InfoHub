@@ -8,31 +8,18 @@ export default function WeatherModule() {
   const [isLoading, setL] = useState(false);
   const [msg, setMsg] = useState("");
 
-  const parseQuery = (q) => {
-    const parts = q.split(",").map(s => s.trim()).filter(Boolean);
-    if (parts.length !== 3) return null;
-    const [city, state, country] = parts;
-    return { city, state, country };
-  };
-
   const getWeather = async () => {
     setMsg(""); setData(null);
-    const parsed = parseQuery(query);
-    if (!parsed) {
-      setMsg("Enter location as: City, State, CountryCode (e.g., Hyderabad, Telangana, IN)");
-      return;
-    }
+    const city = (query || "").trim();
+    if (!city) { setMsg("Please enter a city name (e.g., Hyderabad)."); return; }
+
     setL(true);
     try {
-      const res = await axios.get("/api/weather", {
-        params: { city: parsed.city, state: parsed.state, country: parsed.country },
-      });
+      const res = await axios.get("/api/weather", { params: { city } });
       setData(res.data);
     } catch (e) {
-      setMsg(e.response?.data?.error || "Could not fetch weather.");
-    } finally {
-      setL(false);
-    }
+      setMsg(e?.response?.data?.error || "Could not fetch weather.");
+    } finally { setL(false); }
   };
 
   const useCurrent = () => {
@@ -46,15 +33,10 @@ export default function WeatherModule() {
             params: { lat: coords.latitude, lon: coords.longitude },
           });
           setData(r.data);
-          const guess = [r.data?.city, r.data?.state, r.data?.country]
-            .filter(Boolean)
-            .join(", ");
-          if (guess) setQuery(guess);
+          if (r.data?.city) setQuery(r.data.city); // keep input as city only
         } catch {
           setMsg("Could not fetch location weather.");
-        } finally {
-          setL(false);
-        }
+        } finally { setL(false); }
       },
       () => setMsg("Please allow location access.")
     );
@@ -69,7 +51,7 @@ export default function WeatherModule() {
       <div className="flex flex-col sm:flex-row gap-3 items-stretch">
         <input
           className="input flex-1"
-          placeholder="City, State, CountryCode  (e.g., Hyderabad, Telangana, IN)"
+          placeholder="Enter city (e.g., Hyderabad)"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -92,9 +74,7 @@ export default function WeatherModule() {
           <div className="card">
             <p className="text-sm text-slate-400">Location</p>
             <p className="text-lg font-medium">
-              {data.city}
-              {data.state ? `, ${data.state}` : ""}
-              {data.country ? `, ${data.country}` : ""}
+              {data.city}{data.country ? `, ${data.country}` : ""}
             </p>
           </div>
           <div className="card">
