@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { LocateFixed, CloudSun, Search } from "lucide-react";
 
@@ -12,7 +12,6 @@ export default function WeatherModule() {
     setMsg(""); setData(null);
     const city = (query || "").trim();
     if (!city) { setMsg("Please enter a city name (e.g., Hyderabad)."); return; }
-
     setL(true);
     try {
       const res = await axios.get("/api/weather", { params: { city } });
@@ -22,9 +21,12 @@ export default function WeatherModule() {
     } finally { setL(false); }
   };
 
-  const useCurrent = () => {
+  const useCurrent = async (silent = false) => {
     setMsg(""); setData(null);
-    if (!navigator.geolocation) return setMsg("Geolocation not supported.");
+    if (!navigator.geolocation) {
+      if (!silent) setMsg("Geolocation not supported.");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         setL(true);
@@ -33,14 +35,16 @@ export default function WeatherModule() {
             params: { lat: coords.latitude, lon: coords.longitude },
           });
           setData(r.data);
-          if (r.data?.city) setQuery(r.data.city); // keep input as city only
+          if (r.data?.city) setQuery(r.data.city);
         } catch {
-          setMsg("Could not fetch location weather.");
+          if (!silent) setMsg("Could not fetch location weather.");
         } finally { setL(false); }
       },
-      () => setMsg("Please allow location access.")
+      () => { if (!silent) setMsg("Please allow location access."); }
     );
   };
+
+  useEffect(() => { useCurrent(true);}, []);
 
   return (
     <div className="space-y-4">
@@ -60,7 +64,7 @@ export default function WeatherModule() {
           <button className="btn flex items-center gap-2" onClick={getWeather}>
             <Search className="size-4" /> Search
           </button>
-          <button className="btn flex items-center gap-2" onClick={useCurrent}>
+          <button className="btn flex items-center gap-2" onClick={() => useCurrent(false)}>
             <LocateFixed className="size-4" /> Current
           </button>
         </div>

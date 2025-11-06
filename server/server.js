@@ -38,23 +38,25 @@ app.get("/api/quote", async (_req, res) => {
 
 app.get("/api/weather", async (req, res) => {
   try {
-    const { city } = req.query;
+    const { city, lat, lon } = req.query;
 
-    if (!city) {
-      return res.status(400).json({ error: "Please provide a city name." });
+    let query = "";
+    if (lat && lon) {
+      query = `lat=${lat}&lon=${lon}`;
+    } else if (city) {
+      query = `q=${encodeURIComponent(city)}`;
+    } else {
+      return res.status(400).json({ error: "Provide either city or lat/lon." });
     }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-      city
-    )}&appid=${process.env.WEATHER_API_KEY}&units=metric`;
-
+    const url = `https://api.openweathermap.org/data/2.5/weather?${query}&appid=${process.env.WEATHER_API_KEY}&units=metric`;
     const r = await axios.get(url);
     const { main, weather, name, sys, coord } = r.data;
 
     res.json({
-      city: name,
-      country: sys?.country,
-      coords: coord,
+      city: name || city || null,
+      country: sys?.country || null,
+      coords: coord || null,
       temperature: main?.temp ?? null,
       feelsLike: main?.feels_like ?? null,
       condition: weather?.[0]?.description ?? "N/A",
@@ -64,6 +66,7 @@ app.get("/api/weather", async (req, res) => {
     res.status(500).json({ error: "Could not fetch weather data." });
   }
 });
+
 
 
 app.get("/api/currency", async (req, res) => {
