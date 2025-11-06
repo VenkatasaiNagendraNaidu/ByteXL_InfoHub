@@ -30,7 +30,6 @@ export default function CurrencyConverter() {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Currency Converter</h2>
 
-      {/* Amount */}
       <input
         className="input"
         value={amount}
@@ -39,7 +38,6 @@ export default function CurrencyConverter() {
         inputMode="decimal"
       />
 
-      {/* From | Swap | To */}
       <div className="conv-row items-center">
         <div className="select-wrap">
           <select className="select" value={from} onChange={e=>setFrom(e.target.value)}>
@@ -60,10 +58,8 @@ export default function CurrencyConverter() {
         </div>
       </div>
 
-      {/* Convert */}
       <button className="btn w-full sm:w-auto" onClick={convert}>Convert</button>
 
-      {/* States */}
       {isLoading && <p className="text-slate-300">Converting…</p>}
       {error && <p className="text-red-300">{error}</p>}
 
