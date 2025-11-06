@@ -1,22 +1,22 @@
 {
-    "name": "client",
-    "private": true,
-    "version": "1.0.0",
-    "scripts": {
-        "dev": "vite",
-        "build": "npm run build:css && vite build",
-        "preview": "vite preview",
-        "build:css": "tailwindcss -i ./src/tw-input.css -o ./public/tw.css --minify"
-    },
-    "dependencies": {
-        "axios": "^1.13.2",
-        "lucide-react": "^0.552.0",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-react": "^4.7.0",
-        "tailwindcss": "^3.4.18",
-        "vite": "^5.4.21"
-    }
+    "name":  "client",
+    "private":  true,
+    "version":  "1.0.0",
+    "scripts":  {
+                    "dev":  "vite",
+                    "build":  "npm run build:css \u0026\u0026 vite build",
+                    "preview":  "vite preview",
+                    "build:css":  "tailwindcss -i ./src/tw-input.css -o ./public/tw.css --minify"
+                },
+    "dependencies":  {
+                         "axios":  "^1.13.2",
+                         "lucide-react":  "^0.552.0",
+                         "react":  "^18.3.1",
+                         "react-dom":  "^18.3.1"
+                     },
+    "devDependencies":  {
+                            "@vitejs/plugin-react":  "^4.7.0",
+                            "tailwindcss":  "^3.4.18",
+                            "vite":  "^5.4.21"
+                        }
 }
