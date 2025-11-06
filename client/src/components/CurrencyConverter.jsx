@@ -18,51 +18,60 @@ export default function CurrencyConverter() {
     setError(""); setData(null); setLoad(true);
     try {
       const n = Number(amount);
-      if (!n || n <= 0) throw new Error("Invalid amount");
+      if (!n || n <= 0) throw new Error("Enter a valid amount");
       const r = await axios.get("/api/currency", { params: { amount: n, from, to } });
       setData(r.data);
-    } catch (e) { setError(e?.response?.data?.error || "Conversion failed."); }
-    finally { setLoad(false); }
+    } catch (e) {
+      setError(e?.response?.data?.error || e.message || "Conversion failed.");
+    } finally { setLoad(false); }
   };
 
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Currency Converter</h2>
 
+      {/* Amount */}
       <input
-        className="input w-full"
+        className="input"
         value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        onChange={e=>setAmount(e.target.value)}
         placeholder="Enter amount"
+        inputMode="decimal"
       />
 
-      <div className="flex items-center gap-3">
-        <select className="input flex-1" value={from} onChange={(e)=>setFrom(e.target.value)}>
-          {CURRENCIES.map(c => <option key={c}>{c}</option>)}
-        </select>
+      {/* From | Swap | To */}
+      <div className="conv-row items-center">
+        <div className="select-wrap">
+          <select className="select" value={from} onChange={e=>setFrom(e.target.value)}>
+            {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <span className="select-chevron" />
+        </div>
 
-        <button
-          className="btn shrink-0 w-12 h-12 flex items-center justify-center"
-          onClick={swap}
-          aria-label="Swap currencies"
-          title="Swap"
-        >
+        <button className="icon-btn" onClick={swap} aria-label="Swap">
           <ArrowRightLeft className="size-5" />
         </button>
 
-        <select className="input flex-1" value={to} onChange={(e)=>setTo(e.target.value)}>
-          {CURRENCIES.map(c => <option key={c}>{c}</option>)}
-        </select>
+        <div className="select-wrap">
+          <select className="select" value={to} onChange={e=>setTo(e.target.value)}>
+            {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <span className="select-chevron" />
+        </div>
       </div>
 
-      <button className="btn w-full" onClick={convert}>Convert</button>
+      {/* Convert */}
+      <button className="btn w-full sm:w-auto" onClick={convert}>Convert</button>
 
+      {/* States */}
       {isLoading && <p className="text-slate-300">Converting…</p>}
       {error && <p className="text-red-300">{error}</p>}
+
       {!isLoading && !error && data && (
         <div className="card">
           <p className="text-lg">
-            <span className="font-semibold">{data.amount} {data.from}</span>{" = "}
+            <span className="font-semibold">{data.amount} {data.from}</span>
+            {" = "}
             <span className="font-semibold">{data.result} {data.to}</span>
           </p>
           <p className="text-xs text-slate-400 mt-1">
